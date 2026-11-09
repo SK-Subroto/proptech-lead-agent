@@ -1,0 +1,39 @@
+google:
+  # off | discovery_only. See specs/design.md section 4.2.
+  mode: discovery_only
+  monthly_request_budget: 900
+  # Safety lock. Stays false until the owner approves the full run.
+  # While false, only a dry run (--limit) can call Google.
+  full_run_confirmed: false
+
+vdiv:
+  # Stays false unless the association gives written permission.
+  permission_confirmed: false
+
+http:
+  user_agent: "HausverwaltungLeadEngine/0.1 (company website research for a job case study; respects robots.txt)"
+  timeout_seconds: 20
+  max_retries: 2
+
+crawl:
+  min_seconds_between_requests: 2.0
+  max_relevant_pages: 3
+  max_chars_per_company: 6000
+  workers: 8
+
+overpass:
+  url: https://overpass-api.de/api/interpreter
+  timeout_seconds: 180
+
+nominatim:
+  url: https://nominatim.openstreetmap.org/search
+  min_seconds_between_requests: 1.1
+
+llm:
+  # Only claude_code is implemented. ollama and anthropic_api are future options.
+  backend: claude_code
+  batch_size: 20
+
+validation:
+  seed: 42
+  sample_size: 30

@@ -1,0 +1,45 @@
+name: Berlin
+slug: berlin
+output_basename: hausverwaltungen_berlin
+
+# ISO 3166-2 code of the administrative area used in the Overpass query.
+osm_area_iso: DE-BE
+
+bbox:
+  south: 52.338
+  west: 13.088
+  north: 52.676
+  east: 13.761
+
+center:
+  lat: 52.5200
+  lng: 13.4050
+
+postcode:
+  min: 10115
+  max: 14199
+
+boundary:
+  url: https://gdi.berlin.de/services/wfs/alkis_bezirke
+  layer: alkis_bezirke:bezirksgrenzen
+  name_field: namgem
+  source_crs: 25833
+  expected_count: 12
+  # Nudges in metres (east, north) so PNG labels stay inside narrow districts.
+  label_offsets_m:
+    Friedrichshain-Kreuzberg: [1100, -900]
+    Steglitz-Zehlendorf: [0, 1200]
+    Tempelhof-Schöneberg: [-500, -1500]
+    Neukölln: [800, -1500]
+  licence: dl-de/zero-2.0
+  attribution: "Bezirksgrenzen: Geoportal Berlin / ALKIS Berlin Bezirke (dl-de/zero-2.0)"
+
+google:
+  queries:
+    - Hausverwaltung
+    - Immobilienverwaltung
+    - WEG Verwaltung
+    - Mietverwaltung
+  start_grid: 4
+  max_depth: 2
+  max_pages: 3

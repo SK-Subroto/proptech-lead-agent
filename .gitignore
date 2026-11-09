@@ -1,0 +1,19 @@
+# Secrets and local environment
+.env
+.venv/
+
+# Python
+__pycache__/
+*.egg-info/
+.pytest_cache/
+
+# Generated data: third-party page text, Google responses, personal contact data
+data/
+outputs/*.xlsx
+outputs/*.csv
+!outputs/district_summary.csv
+validation_sample.xlsx
+
+# Netlify
+.netlify/
+outputs/site/

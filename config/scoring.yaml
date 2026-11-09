@@ -1,0 +1,89 @@
+# lead_score = round(100 * sum(weight * s) / sum(weight)); s is in [0, 1].
+# A missing KPI uses `neutral` and does not count towards data_completeness.
+# The weights are reasoned judgement: there is no win/loss data to calibrate them.
+
+neutral: 0.5
+
+tiers:
+  A: 70
+  B: 40
+
+# Cooperatives and municipal landlords manage their own housing and buy
+# differently from a Hausverwaltung, so they cannot reach Tier A.
+tier_caps:
+  self_managed_landlord: B
+
+kpis:
+  units_managed:
+    weight: 30
+    bins:
+      - {below: 100, score: 0.1, label: "under 100 units"}
+      - {below: 500, score: 0.4, label: "{value} units"}
+      - {below: 2000, score: 0.7, label: "{value} units"}
+      - {below: 10000, score: 1.0, label: "{value} units"}
+      - {below: null, score: 0.8, label: "{value} units, very large"}
+  management_type:
+    weight: 15
+  employees:
+    weight: 10
+    bins:
+      - {below: 3, score: 0.2, label: "very small team"}
+      - {below: 10, score: 0.5, label: "{value} employees"}
+      - {below: 50, score: 1.0, label: "{value} employees"}
+      - {below: null, score: 0.8, label: "{value} employees"}
+  remote_reading_signal:
+    weight: 10
+  metering_provider:
+    weight: 10
+  digital_maturity:
+    weight: 10
+  years_in_business:
+    weight: 5
+    bins:
+      - {below: 3, score: 0.3, label: "founded recently"}
+      - {below: 10, score: 0.6, label: "{value} years in business"}
+      - {below: null, score: 0.8, label: "{value} years in business"}
+  reachability:
+    weight: 5
+  hiring_signal:
+    weight: 3
+  locations:
+    weight: 2
+
+management_type_scores:
+  WEG: {score: 1.0, label: "WEG management"}
+  Miet: {score: 1.0, label: "rental management"}
+  SE: {score: 0.6, label: "SE management"}
+  Gewerbe: {score: 0.2, label: "commercial only"}
+
+digital_maturity_scores:
+  high: {score: 1.0, label: "digitally mature"}
+  medium: {score: 0.6, label: "some digital tools"}
+  low: {score: 0.2, label: "low digital maturity"}
+
+mentioned_scores:
+  remote_reading_signal: {score: 1.0, label: "mentions remote reading"}
+  metering_provider: {score: 0.7, label: "names metering provider"}
+  hiring_signal: {score: 1.0, label: "hiring"}
+
+reachability_scores:
+  found_on_site: {score: 1.0, label: "personal email on site"}
+  pattern_inferred: {score: 0.8, label: "email pattern known"}
+  generic_only: {score: 0.6, label: "named contact, generic email"}
+  none: {score: 0.5, label: "named contact"}
+  no_contact: {score: 0.1, label: "no named contact"}
+
+locations_scores:
+  multiple: {score: 1.0, label: "multiple locations"}
+  single: {score: 0.5, label: "single location"}
+
+# First match wins. Text is a fixed template, not generated per company.
+angles:
+  - when: remote_reading_signal
+    text: "Remote reading is already on their site: ask how far the conversion for the 31.12.2026 HeizkostenV deadline has progressed."
+  - when: metering_provider
+    text: "They name {metering_providers}: ask about service and contract end date ahead of the 31.12.2026 retrofit deadline."
+  - when: digital_maturity_high
+    text: "Digitally mature: lead with data handover and integration with {software_mentioned}."
+  - when: default
+    text: "Ask who handles heating cost billing and whether all devices are remote-readable before 31.12.2026."

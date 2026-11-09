@@ -1,0 +1,99 @@
+# All patterns are Python regular expressions, matched case-insensitively
+# unless listed under a *_case_sensitive key.
+
+metering_providers:
+  ista: '\bista\b'
+  Techem: '\btechem\b'
+  Brunata: '\bbrunata\b'
+  Minol: '\bminol\b'
+  Kalo: '\bkalo\b'
+  Metrona: '\bmetrona\b'
+  Noventic: '\bnoventic\b'
+  Qundis: '\bqundis\b'
+
+software:
+  casavi: '\bcasavi\b'
+  Domus: '\bdomus\s?(?:1000|4000|software)\b'
+  Karthago: '\bkarthago\b'
+  immocloud: '\bimmocloud\b'
+  Haufe: '\bhaufe\b'
+  iX-Haus: '\bix-haus\b'
+  immoware24: '\bimmoware\s?24\b'
+  Wodis: '\bwodis\b'
+  facilioo: '\bfacilioo\b'
+  objego: '\bobjego\b'
+  Fairwalter: '\bfairwalter\b'
+
+owner_portal: '(eigent[üu]mer|kunden|mieter)[-\s]?(portal|app)\b|online[-\s]?portal'
+
+remote_reading: 'funk(?:z[äa]hler|ablesung|erfassung|basiert|technik|ablesbar)|fernables|fernauslesbar|heizkostenv\b|heizkostenverordnung'
+
+hiring: 'stellenangebot|stellenanzeige|offene\s+stellen|wir\s+suchen|\(m/w/d\)|\(w/m/d\)|\(d/m/w\)'
+
+# A site with none of these does not describe property management.
+management_evidence: 'hausverwaltung|immobilienverwaltung|mietverwaltung|wohnungsverwaltung|grundst[üu]cksverwaltung|geb[äa]udeverwaltung|weg[-\s]?verwaltung|sondereigentumsverwaltung|\bse[-\s]verwaltung|verwaltung\s+von\s+(?:immobilien|wohn|miet|mehrfamilien|grundbesitz|eigentum|h[äa]usern)|wohnimmobilienverwalter|zertifizierter\s+verwalter|immobilienmakler\W+\w*\W*hausverwalter|wir\s+verwalten|bewirtschaftung\s+von|wohnungseigent[üu]mergemeinschaft'
+
+# OSM name patterns for Stage 1.
+osm_name_terms: 'Hausverwaltung|Immobilienverwaltung|Mietverwaltung|Wohnungsverwaltung|Grundst[üu]cksverwaltung|Grundbesitzverwaltung|WEG-Verwaltung'
+
+# Non-target rules: `exclude` applies unless `unless` also matches the name.
+non_target_rules:
+  - reason: competitor_metering_provider
+    exclude: '\b(?:objektus|techem|brunata|minol|metrona|noventic|qundis|kalo)\b|\bista\b|messdienst'
+  - reason: hausmeisterservice
+    exclude: 'hausmeister|hauswart'
+    unless: 'verwalt'
+  - reason: facility_management_only
+    exclude: 'facility|geb[äa]udereinigung|geb[äa]udeservice|reinigung|winterdienst'
+    unless: 'verwalt'
+  - reason: estate_agent_only
+    exclude: 'makler|maklerb[üu]ro'
+    unless: 'verwalt'
+  - reason: tenant_or_owner_association
+    exclude: 'mieterverein|mieterbund|haus\s*&\s*grund|haus\s+und\s+grund'
+    unless: 'hausverwaltung'
+  - reason: public_authority
+    exclude: 'be?r?zirksamt|senatsverwaltung|finanzamt|jobcenter|b[üu]rgeramt'
+
+self_managed_landlord: 'genossenschaft|\beg\b|degewo|gesobau|gewobag|howoge|stadt\s+und\s+land|\bwbm\b|berlinovo|vonovia|deutsche\s+wohnen'
+
+# Checked by a person reading the crawled site. company_id: reason
+manual_exclusions:
+  hv_1cc5b818d3: office_broker_not_a_property_manager
+  hv_764835f72e: law_firm_not_a_property_manager
+  hv_41427a7ad7: hausmeisterservice
+  hv_6bc22280ab: facility_management_only
+  hv_df73ce077a: facility_management_only
+  hv_71d3d2bd1c: trades_not_a_property_manager
+  hv_86324550fc: trades_not_a_property_manager
+  hv_bb86ba1c66: trades_not_a_property_manager
+  hv_39039e2658: trades_not_a_property_manager
+  hv_d38efd26ca: trades_not_a_property_manager
+  hv_8dbd192f17: training_provider_not_a_property_manager
+
+# Shared hosts: never treated as the company's own domain.
+platform_domains:
+  - facebook.com
+  - instagram.com
+  - linkedin.com
+  - xing.com
+  - twitter.com
+  - x.com
+  - youtube.com
+  - linktr.ee
+  - google.com
+  - sites.google.com
+  - business.site
+  - wixsite.com
+  - jimdo.com
+  - jimdofree.com
+  - immobilienscout24.de
+  - immowelt.de
+  - gelbeseiten.de
+  - 11880.com
+  - dasoertliche.de
+  - yelp.de
+  - t-online.de
+  - gmx.de
+  - web.de
+  - berlin.de

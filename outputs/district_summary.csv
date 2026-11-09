@@ -1,0 +1,13 @@
+﻿district,leads,tier_A,tier_B,tier_C,mean_score,share_of_leads_pct
+Charlottenburg-Wilmersdorf,132,11,121,0,57.5,25.6
+Friedrichshain-Kreuzberg,41,1,40,0,55.0,8.0
+Lichtenberg,16,0,16,0,55.2,3.1
+Marzahn-Hellersdorf,22,0,22,0,54.0,4.3
+Mitte,57,7,50,0,57.5,11.1
+Neukölln,14,0,14,0,58.1,2.7
+Pankow,54,2,52,0,57.2,10.5
+Reinickendorf,27,0,27,0,56.0,5.2
+Spandau,2,0,2,0,58.5,0.4
+Steglitz-Zehlendorf,74,1,73,0,56.9,14.4
+Tempelhof-Schöneberg,50,4,46,0,56.4,9.7
+Treptow-Köpenick,26,0,26,0,54.2,5.0
