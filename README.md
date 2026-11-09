@@ -10,7 +10,23 @@ Built as a case study for a metering service provider, whose main customers are 
 
 ![Leads by tier and by Berlin district](outputs/lead_map.png)
 
+**[Open the interactive map](https://vermillion-cocada-73949e.netlify.app)**
+
 ---
+
+## Latest run
+
+| Measure | Result |
+|---|---|
+| Companies listed | 535 (26 Tier A, 509 Tier B) |
+| Named decision-maker | 70 % |
+| Personal emails | 29 published on company websites, 16 inferred and labelled unverified |
+| Placed in an official district | 515 |
+| Google usage | 297 of 1,000 free calls, EUR 0 |
+| Validation | 24 of 24 judged fields correct in a 5-row manual check; 94 % in a 25-row AI re-check, before fixes |
+
+The manual sample is small and the AI re-check is not independent, so treat both as indicative.
+
 
 ## What you get
 
@@ -69,7 +85,7 @@ Contacts run before scoring because being able to reach someone is itself a scor
 | Hiring signal | 3 | Growth |
 | Locations and other cities | 2 | Scale |
 
-Tiers: **A** at 70 or above, **B** from 40 to 69, **C** below 40. The weights are reasoned judgement, because no win/loss data was available to calibrate them.
+Tiers: **A** at 70 or above, **B** from 40 to 69, **C** below 40. Cooperatives and municipal landlords are capped at Tier B, because they manage their own housing. The weights are reasoned judgement, because no win/loss data was available to calibrate them.
 
 The urgency signal comes from [§ 5 Abs. 3 HeizkostenV](https://www.gesetze-im-internet.de/heizkostenv/__5.html): non-remote-readable devices must be retrofitted or replaced by 31 December 2026, with exemptions. A website mentioning remote reading shows awareness. It does not prove the company still has to convert.
 
@@ -118,6 +134,7 @@ python -m leadengine validation-report
 ## Project layout
 
 ```text
+.claude/      reusable skill for the Claude Code KPI step
 config/       city settings, scoring weights, keywords, pipeline limits
 src/leadengine/
   sources/    OpenStreetMap and Google Places
@@ -142,7 +159,7 @@ outputs/      generated deliverables
 | Google Places (optional) | Candidate websites only | 1,000 free calls per month for these fields |
 | Claude Code | KPI reading | Existing Pro plan, no API charge |
 
-The original Google script could reach 4,032 calls in the worst case, about USD 106. `ledger.py` counts every attempt before it is sent and stops at 900 per month. A daily quota in Google Cloud is the second safeguard.
+The original Google script could reach 4,032 calls in the worst case, about USD 106. `ledger.py` counts every attempt before it is sent and stops at 900 per month. A daily quota in Google Cloud is the second safeguard. A full Google run also stays locked until `google.full_run_confirmed` is set to `true` in `config/pipeline.yaml`.
 
 ## Scaling with a paid LLM
 
@@ -152,10 +169,11 @@ Stage 3b sits behind a small interface: `backend = claude_code | ollama | anthro
 
 - **Coverage depends on Google.** OSM alone found about 80 usable companies in Berlin. With Google discovery the list reached 535 verified companies, which is a minimum and not the full market.
 - **Many KPIs are unpublished.** Most firms do not state unit counts, so many cells read `not stated`.
-- **Larger landlords can rank higher** because they publish more, not because they are better leads. Cooperatives and municipal landlords are flagged `self_managed_landlord`.
+- **Most scores rest on partial data.** Average completeness is 21.5 %, so Tier B mixes average leads with leads that are simply unknown.
+- **Companies that publish more can rank higher**, whether or not they are better leads.
 - **Personal emails are rare.** Most Impressum pages list only a general address. `pattern_inferred` addresses are unverified.
 - **A missing keyword proves little.** Only up to 5 pages per company are read, so absence is recorded as `not_mentioned`.
-- **Rule extraction makes mistakes** on unusual pages. Field accuracy is reported from the manual sample in `validation_report.md`.
+- **Rule extraction makes mistakes** on unusual pages. Low-confidence names are flagged `name_needs_review`, and field accuracy is in `validation_report.md`.
 
 ## Data, licences and legal notes
 
